@@ -1,10 +1,214 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<title>小説サイト</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星巡りの剣</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    background:#070912;
+    color:#e6eaf7;
+    font-family:
+        "Hiragino Sans",
+        "Yu Gothic",
+        sans-serif;
+    line-height:1.8;
+}
+a{
+    text-decoration:none;
+}
+.hero{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:40px;
+    background:
+    linear-gradient(
+        rgba(0,0,0,.55),
+        rgba(0,0,0,.85)
+    ),
+    radial-gradient(
+        circle at top,
+        #1d2955 0%,
+        #070912 70%
+    );
+}
+.hero-inner{
+    max-width:900px;
+}
+.site-title{
+    font-size:4rem;
+    letter-spacing:.15em;
+    margin-bottom:20px;
+    text-shadow:0 0 20px rgba(130,170,255,.8);
+}
+.catch{
+    font-size:1.4rem;
+    color:#c8d6ff;
+    margin-bottom:40px;
+}
+.button{
+    display:inline-block;
+    padding:14px 36px;
+    border:1px solid #7ea4ff;
+    color:white;
+    transition:.3s;
+}
+.button:hover{
+    background:#7ea4ff;
+    color:#000;
+}
+section{
+    max-width:1100px;
+    margin:auto;
+    padding:90px 25px;
+}
+.section-title{
+    text-align:center;
+    font-size:2rem;
+    letter-spacing:.2em;
+    color:#7ea4ff;
+    margin-bottom:40px;
+}
+.story{
+    background:#0d111f;
+}
+.story-text{
+    max-width:800px;
+    margin:auto;
+    font-size:1.1rem;
+}
+.characters{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+}
+.card{
+    background:#101627;
+    border:1px solid #26304d;
+    padding:25px;
+    transition:.3s;
+}
+.card:hover{
+    transform:translateY(-5px);
+    border-color:#7ea4ff;
+    box-shadow:0 0 20px rgba(126,164,255,.3);
+}
+.card h3{
+    color:#7ea4ff;
+    margin-bottom:10px;
+}
+.world{
+    background:#0d111f;
+}
+.world-box{
+    background:#101627;
+    padding:25px;
+    border-left:4px solid #7ea4ff;
+    margin-bottom:20px;
+}
+.footer{
+    text-align:center;
+    padding:50px 20px;
+    color:#888;
+    border-top:1px solid #1f2740;
+}
+.small{
+    color:#aaa;
+    font-size:.9rem;
+}
+</style>
 </head>
 <body>
-<h1>星巡りの剣</h1>
-<p>世界の真実を知った時、少年は剣を取る――</p>
+<header class="hero">
+    <div class="hero-inner">
+        <h1 class="site-title">
+            星巡りの剣
+        </h1>
+        <p class="catch">
+            世界の真実を知った時、<br>
+            少年は剣を取る――
+        </p>
+        <a href="#story" class="button">
+            物語を見る
+        </a>
+    </div>
+</header>
+<section id="story" class="story">
+    <h2 class="section-title">
+        STORY
+    </h2>
+    <div class="story-text">
+        都市アレシスで暮らす少年ソラ。
+        平穏な日常は、一人の少女との出会いによって終わりを迎える。
+        世界に隠された真実。
+        忘れ去られた歴史。
+        交錯する運命。
+        それぞれの想いを胸に、
+        少年少女たちは剣を手に歩き出す。
+    </div>
+</section>
+<section>
+    <h2 class="section-title">
+        CHARACTER
+    </h2>
+    <div class="characters">
+        <div class="card">
+            <h3>ソラ</h3>
+            <p>
+                真実を追い求める少年。
+            </p>
+        </div>
+        <div class="card">
+            <h3>リゼア</h3>
+            <p>
+                多くの秘密を抱える少女。
+            </p>
+        </div>
+        <div class="card">
+            <h3>アスカ</h3>
+            <p>
+                卓越した剣技を持つ剣士。
+            </p>
+        </div>
+        <div class="card">
+            <h3>ネロ</h3>
+            <p>
+                猫カフェ「にゃごすちん」の店主。
+            </p>
+        </div>
+    </div>
+</section>
+<section class="world">
+    <h2 class="section-title">
+        WORLD
+    </h2>
+    <div class="world-box">
+        <h3>都市アレシス</h3>
+        <p>
+            多くの冒険者と旅人が集う巨大都市。
+        </p>
+    </div>
+    <div class="world-box">
+        <h3>剣術の型</h3>
+        <p>
+            流派ごとに異なる戦闘理論が存在する。
+        </p>
+    </div>
+</section>
+<footer class="footer">
+    <p>© 星巡りの剣</p>
+    <p class="small">
+        Official Novel Website
+    </p>
+</footer>
 </body>
 </html>
