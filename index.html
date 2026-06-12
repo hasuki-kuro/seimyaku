@@ -3,212 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>星巡りの剣</title>
+<title>星巡りの剣 - MENU</title>
 <style>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-body{
-    background:#070912;
-    color:#e6eaf7;
-    font-family:
-        "Hiragino Sans",
-        "Yu Gothic",
-        sans-serif;
-    line-height:1.8;
+
+body {
+    /* 2枚目画像のような、鮮やかで深みのあるブルーのグラデーション */
+    background: radial-gradient(circle at center, #0099ff 0%, #0055cc 70%, #0033aa 100%);
+    color: #ffffff;
+    font-family: "游明朝", YuMincho, "Hiragino Mincho ProN", serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
 }
-a{
-    text-decoration:none;
+
+/* 背景にうっすらとキャラクターやグラフィックを入れるための装飾（オプション） */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* ここに背景キャラクターの画像URLを入れられます */
+    /* background: url('character-silhouette.png') no-repeat center/cover; */
+    opacity: 0.15; /* うっすら見える程度に透過 */
+    z-index: 1;
+    pointer-events: none;
 }
-.hero{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:40px;
-    background:
-    linear-gradient(
-        rgba(0,0,0,.55),
-        rgba(0,0,0,.85)
-    ),
-    radial-gradient(
-        circle at top,
-        #1d2955 0%,
-        #070912 70%
-    );
+
+/* メニュー全体のコンテナ */
+.menu-container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 600px;
+    padding: 40px 20px;
+    text-align: center;
 }
-.hero-inner{
-    max-width:900px;
+
+/* 右上のCLOSEボタン */
+.close-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 8px 12px;
+    transition: 0.3s;
+    text-transform: uppercase;
 }
-.site-title{
-    font-size:4rem;
-    letter-spacing:.15em;
-    margin-bottom:20px;
-    text-shadow:0 0 20px rgba(130,170,255,.8);
+.close-btn:hover {
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
-.catch{
-    font-size:1.4rem;
-    color:#c8d6ff;
-    margin-bottom:40px;
+
+/* 上部のロゴ・タイトルエリア */
+.menu-header {
+    margin-bottom: 40px;
 }
-.button{
-    display:inline-block;
-    padding:14px 36px;
-    border:1px solid #7ea4ff;
-    color:white;
-    transition:.3s;
+.menu-logo {
+    font-size: 2.2rem;
+    letter-spacing: 0.2em;
+    font-weight: bold;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    margin-bottom: 5px;
 }
-.button:hover{
-    background:#7ea4ff;
-    color:#000;
+.menu-sub {
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 20px;
+    display: inline-block;
+    width: 80%;
 }
-section{
-    max-width:1100px;
-    margin:auto;
-    padding:90px 25px;
+
+/* SEASON 1 などのシリーズ切り替えタグ */
+.season-tag {
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    margin: 20px 0;
+    color: rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
 }
-.section-title{
-    text-align:center;
-    font-size:2rem;
-    letter-spacing:.2em;
-    color:#7ea4ff;
-    margin-bottom:40px;
+
+/* 2列に並ぶメニューグリッド */
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 綺麗に2分割 */
+    gap: 25px 40px; /* 縦と横の隙間 */
+    padding: 20px 0;
 }
-.story{
-    background:#0d111f;
+
+/* メニューの各項目 */
+.menu-item {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s ease;
+    text-transform: uppercase;
+    position: relative;
+    display: inline-block;
 }
-.story-text{
-    max-width:800px;
-    margin:auto;
-    font-size:1.1rem;
+
+/* 画像にあった「現在のページ（TOP）」の剣マークのようなエフェクトの再現 */
+.menu-item.active {
+    color: #fffb14; /* 画像の『TOP ➔』のような黄色・ゴールド系のアクセント */
+    text-shadow: 0 0 10px rgba(255, 251, 20, 0.6);
 }
-.characters{
-    display:grid;
-    grid-template-columns:
-        repeat(auto-fit,minmax(220px,1fr));
-    gap:25px;
+.menu-item.active::after {
+    content: " ➔";
+    font-size: 1rem;
+    vertical-align: middle;
 }
-.card{
-    background:#101627;
-    border:1px solid #26304d;
-    padding:25px;
-    transition:.3s;
+
+/* 通常項目のホバー効果 */
+.menu-item:not(.active):hover {
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
 }
-.card:hover{
-    transform:translateY(-5px);
-    border-color:#7ea4ff;
-    box-shadow:0 0 20px rgba(126,164,255,.3);
-}
-.card h3{
-    color:#7ea4ff;
-    margin-bottom:10px;
-}
-.world{
-    background:#0d111f;
-}
-.world-box{
-    background:#101627;
-    padding:25px;
-    border-left:4px solid #7ea4ff;
-    margin-bottom:20px;
-}
-.footer{
-    text-align:center;
-    padding:50px 20px;
-    color:#888;
-    border-top:1px solid #1f2740;
-}
-.small{
-    color:#aaa;
-    font-size:.9rem;
+
+/* 下部のオフィシャル表記 */
+.menu-footer {
+    margin-top: 50px;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
 }
 </style>
 </head>
 <body>
-<header class="hero">
-    <div class="hero-inner">
-        <h1 class="site-title">
-            星巡りの剣
-        </h1>
-        <p class="catch">
-            世界の真実を知った時、<br>
-            少年は剣を取る――
-        </p>
-        <a href="#story" class="button">
-            物語を見る
-        </a>
+
+<a href="#" class="close-btn">✕ CLOSE</a>
+
+<div class="menu-container">
+    
+    <div class="menu-header">
+        <h1 class="menu-logo">星巡りの剣</h1>
+        <p class="menu-sub">Wand and Sword</p>
     </div>
-</header>
-<section id="story" class="story">
-    <h2 class="section-title">
-        STORY
-    </h2>
-    <div class="story-text">
-        都市アレシスで暮らす少年ソラ。
-        平穏な日常は、一人の少女との出会いによって終わりを迎える。
-        世界に隠された真実。
-        忘れ去られた歴史。
-        交錯する運命。
-        それぞれの想いを胸に、
-        少年少女たちは剣を手に歩き出す。
+
+    <div class="season-tag">SEASON 1</div>
+
+    <nav class="menu-grid">
+        <a href="#" class="menu-item active">TOP</a>
+        <a href="#story" class="menu-item">STORY</a>
+        
+        <a href="#" class="menu-item">NEWS</a>
+        <a href="#" class="menu-item">EPISODES</a>
+        
+        <a href="#" class="menu-item">CHARACTER</a>
+        <a href="#" class="menu-item">WORLD</a>
+        
+        <a href="#" class="menu-item">MOVIE</a>
+        <a href="#" class="menu-item">MUSIC</a>
+        
+        <a href="#" class="menu-item">BOOKS</a>
+        <a href="#" class="menu-item">GOODS</a>
+    </nav>
+
+    <div class="menu-footer">
+        Official Website
     </div>
-</section>
-<section>
-    <h2 class="section-title">
-        CHARACTER
-    </h2>
-    <div class="characters">
-        <div class="card">
-            <h3>ソラ</h3>
-            <p>
-                真実を追い求める少年。
-            </p>
-        </div>
-        <div class="card">
-            <h3>リゼア</h3>
-            <p>
-                多くの秘密を抱える少女。
-            </p>
-        </div>
-        <div class="card">
-            <h3>アスカ</h3>
-            <p>
-                卓越した剣技を持つ剣士。
-            </p>
-        </div>
-        <div class="card">
-            <h3>ネロ</h3>
-            <p>
-                猫カフェ「にゃごすちん」の店主。
-            </p>
-        </div>
-    </div>
-</section>
-<section class="world">
-    <h2 class="section-title">
-        WORLD
-    </h2>
-    <div class="world-box">
-        <h3>都市アレシス</h3>
-        <p>
-            多くの冒険者と旅人が集う巨大都市。
-        </p>
-    </div>
-    <div class="world-box">
-        <h3>剣術の型</h3>
-        <p>
-            流派ごとに異なる戦闘理論が存在する。
-        </p>
-    </div>
-</section>
-<footer class="footer">
-    <p>© 星巡りの剣</p>
-    <p class="small">
-        Official Novel Website
-    </p>
-</footer>
+</div>
+
 </body>
 </html>
