@@ -135,6 +135,29 @@
       letter-spacing: 0.5em;
     }
 
+    .menu-close-btn {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: none;
+      border: 1px solid rgba(200, 216, 240, 0.2);
+      color: #5a6e90;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 200;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      padding: 10px 28px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .menu-close-btn:hover {
+      color: #c8d8f0;
+      border-color: rgba(200, 216, 240, 0.5);
+    }
+
     /* ── メインエリア ── */
     main {
       position: relative;
@@ -229,13 +252,14 @@
       <a href="#">CHARACTER</a>
       <a href="#">MAP</a>
     </nav>
+    <button class="menu-close-btn" id="menuCloseBtn">CLOSE</button>
   </div>
 
   <main>
     <div class="catch">
       <div class="catch-divider"><span class="catch-star">✦</span></div>
       <p class="catch-text">
-        星脈が交差する遥かな未来<br>
+        世界の縁で、少年は剣を握り、少女は魔法を。<br>
         科学と魔法の狭間に生きる少年と少女の物語
       </p>
       <div class="catch-divider"><span class="catch-star">✦</span></div>
@@ -245,15 +269,15 @@
          data-theme="dark"
          data-height="200"
          data-chrome="noheader nofooter noborders transparent"
-         href="https://twitter.com/kuronekomaru">
-        Tweets by @kuronekomaru
+         href="https://x.com/kuronekomaru">
+        Posts by kuronekomaru
       </a>
     </div>
   </main>
 
   <footer>@hasuki_kuro</footer>
 
-  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
 
   <script>
     /* ── 星空 ── */
@@ -332,6 +356,11 @@
         menuBtn.classList.remove('open');
       })
     );
+
+    document.getElementById('menuCloseBtn').addEventListener('click', () => {
+      menuOverlay.classList.remove('open');
+      menuBtn.classList.remove('open');
+    });
   </script>
 </body>
 </html>
