@@ -1,186 +1,337 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>星巡りの剣 - MENU</title>
-<style>
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星脈と深淵の狭間で</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body {
-    /* 2枚目画像のような、鮮やかで深みのあるブルーのグラデーション */
-    background: radial-gradient(circle at center, #0099ff 0%, #0055cc 70%, #0033aa 100%);
-    color: #ffffff;
-    font-family: "游明朝", YuMincho, "Hiragino Mincho ProN", serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow-x: hidden;
-}
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #050810;
+      color: #c8d8f0;
+    }
 
-/* 背景にうっすらとキャラクターやグラフィックを入れるための装飾（オプション） */
-body::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    /* ここに背景キャラクターの画像URLを入れられます */
-    /* background: url('character-silhouette.png') no-repeat center/cover; */
-    opacity: 0.15; /* うっすら見える程度に透過 */
-    z-index: 1;
-    pointer-events: none;
-}
+    body {
+      display: flex;
+      flex-direction: column;
+      font-family: 'Montserrat', sans-serif;
+    }
 
-/* メニュー全体のコンテナ */
-.menu-container {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    max-width: 600px;
-    padding: 40px 20px;
-    text-align: center;
-}
+    /* ── 星空キャンバス ── */
+    #starCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
 
-/* 右上のCLOSEボタン */
-.close-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 8px 12px;
-    transition: 0.3s;
-    text-transform: uppercase;
-}
-.close-btn:hover {
-    color: #fff;
-    border-color: #fff;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
+    /* ── ヘッダー ── */
+    header {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 36px 32px 24px;
+    }
 
-/* 上部のロゴ・タイトルエリア */
-.menu-header {
-    margin-bottom: 40px;
-}
-.menu-logo {
-    font-size: 2.2rem;
-    letter-spacing: 0.2em;
-    font-weight: bold;
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-    margin-bottom: 5px;
-}
-.menu-sub {
-    font-size: 0.75rem;
-    letter-spacing: 0.4em;
-    color: rgba(255, 255, 255, 0.6);
-    text-transform: uppercase;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    padding-bottom: 20px;
-    display: inline-block;
-    width: 80%;
-}
+    .site-title {
+      font-family: 'Noto Serif JP', serif;
+      font-weight: 200;
+      font-size: clamp(20px, 4.5vw, 42px);
+      letter-spacing: 0.22em;
+      text-align: center;
+      background: linear-gradient(100deg, #b8ccee 0%, #d4a843 45%, #b8ccee 100%);
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 8s linear infinite;
+    }
 
-/* SEASON 1 などのシリーズ切り替えタグ */
-.season-tag {
-    font-size: 1.4rem;
-    letter-spacing: 0.1em;
-    margin: 20px 0;
-    color: rgba(255, 255, 255, 0.9);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: 10px;
-}
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 220% center; }
+    }
 
-/* 2列に並ぶメニューグリッド */
-.menu-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 綺麗に2分割 */
-    gap: 25px 40px; /* 縦と横の隙間 */
-    padding: 20px 0;
-}
+    /* ── ハンバーガーボタン ── */
+    .menu-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 110;
+      position: absolute;
+      top: 36px;
+      right: 32px;
+    }
 
-/* メニューの各項目 */
-.menu-item {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 1.3rem;
-    letter-spacing: 0.15em;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.3s ease;
-    text-transform: uppercase;
-    position: relative;
-    display: inline-block;
-}
+    .menu-btn span {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: #c8d8f0;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      transform-origin: center;
+    }
 
-/* 画像にあった「現在のページ（TOP）」の剣マークのようなエフェクトの再現 */
-.menu-item.active {
-    color: #fffb14; /* 画像の『TOP ➔』のような黄色・ゴールド系のアクセント */
-    text-shadow: 0 0 10px rgba(255, 251, 20, 0.6);
-}
-.menu-item.active::after {
-    content: " ➔";
-    font-size: 1rem;
-    vertical-align: middle;
-}
+    .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* 通常項目のホバー効果 */
-.menu-item:not(.active):hover {
-    color: #ffffff;
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
-    transform: scale(1.05);
-}
+    /* ── メニューオーバーレイ ── */
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(5, 8, 16, 0.96);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 52px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
 
-/* 下部のオフィシャル表記 */
-.menu-footer {
-    margin-top: 50px;
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
-    color: rgba(255, 255, 255, 0.5);
-    text-transform: uppercase;
-}
-</style>
+    .menu-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .menu-overlay nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .menu-overlay nav a {
+      color: #5a6e90;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 200;
+      font-size: clamp(22px, 5.5vw, 42px);
+      letter-spacing: 0.35em;
+      transition: color 0.3s ease, letter-spacing 0.35s ease;
+    }
+
+    .menu-overlay nav a:hover {
+      color: #d4a843;
+      letter-spacing: 0.5em;
+    }
+
+    /* ── メインエリア ── */
+    main {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 0 20px 12px;
+      gap: 28px;
+    }
+
+    /* ── 中央装飾エリア ── */
+    .catch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .catch-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 200px;
+    }
+
+    .catch-divider::before,
+    .catch-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,216,240,0.25), transparent);
+    }
+
+    .catch-star {
+      color: #d4a843;
+      font-size: 10px;
+      opacity: 0.7;
+    }
+
+    .catch-text {
+      font-family: 'Noto Serif JP', serif;
+      font-weight: 200;
+      font-size: clamp(11px, 1.8vw, 14px);
+      letter-spacing: 0.28em;
+      color: #5a6e90;
+      line-height: 2;
+    }
+
+    /* ── Twitterウィジェット ── */
+    .twitter-wrap {
+      width: 100%;
+      max-width: 360px;
+      height: 200px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(200, 216, 240, 0.08);
+      background: rgba(10, 20, 44, 0.5);
+    }
+
+    /* ── フッター ── */
+    footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 10px 0 16px;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: #3a4e6e;
+      font-weight: 300;
+    }
+  </style>
 </head>
 <body>
 
-<a href="#" class="close-btn">✕ CLOSE</a>
+  <canvas id="starCanvas"></canvas>
 
-<div class="menu-container">
-    
-    <div class="menu-header">
-        <h1 class="menu-logo">星巡りの剣</h1>
-        <p class="menu-sub">Wand and Sword</p>
-    </div>
+  <header>
+    <h1 class="site-title">星脈と深淵の狭間で</h1>
+    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
 
-    <div class="season-tag">SEASON 1</div>
-
-    <nav class="menu-grid">
-        <a href="#" class="menu-item active">TOP</a>
-        <a href="#story" class="menu-item">STORY</a>
-        
-        <a href="#" class="menu-item">NEWS</a>
-        <a href="#" class="menu-item">EPISODES</a>
-        
-        <a href="#" class="menu-item">CHARACTER</a>
-        <a href="#" class="menu-item">WORLD</a>
-        
-        <a href="#" class="menu-item">MOVIE</a>
-        <a href="#" class="menu-item">MUSIC</a>
-        
-        <a href="#" class="menu-item">BOOKS</a>
-        <a href="#" class="menu-item">GOODS</a>
+  <div class="menu-overlay" id="menuOverlay">
+    <nav>
+      <a href="#">STORY</a>
+      <a href="#">EPISODES</a>
+      <a href="#">CHARACTER</a>
+      <a href="#">MAP</a>
     </nav>
+  </div>
 
-    <div class="menu-footer">
-        Official Website
+  <main>
+    <div class="catch">
+      <div class="catch-divider"><span class="catch-star">✦</span></div>
+      <p class="catch-text">
+        星脈が交差する遥かな未来<br>
+        科学と魔法の狭間に生きる少年と少女の物語
+      </p>
+      <div class="catch-divider"><span class="catch-star">✦</span></div>
     </div>
-</div>
+    <div class="twitter-wrap">
+      <a class="twitter-timeline"
+         data-theme="dark"
+         data-height="200"
+         data-chrome="noheader nofooter noborders transparent"
+         href="https://twitter.com/kuronekomaru">
+        Tweets by @kuronekomaru
+      </a>
+    </div>
+  </main>
 
+  <footer>@hasuki_kuro</footer>
+
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+  <script>
+    /* ── 星空 ── */
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const COLORS = ['#c8d8f0', '#c8d8f0', '#c8d8f0', '#d4a843', '#a8b8e0', '#c0a8e8'];
+    const stars = Array.from({ length: 220 }, () => ({
+      x:     Math.random(),
+      y:     Math.random(),
+      r:     Math.random() * 1.6 + 0.2,
+      base:  Math.random() * 0.5 + 0.2,
+      amp:   Math.random() * 0.5,
+      speed: Math.random() * 0.018 + 0.004,
+      phase: Math.random() * Math.PI * 2,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+    }));
+
+    let t = 0;
+    function draw() {
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      // 背景グラデーション
+      const bg = ctx.createRadialGradient(W * 0.5, H * 0.25, 0, W * 0.5, H * 0.25, W * 0.75);
+      bg.addColorStop(0, '#0e1c38');
+      bg.addColorStop(0.6, '#080f20');
+      bg.addColorStop(1, '#050810');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      // 淡い星雲
+      const nb = ctx.createRadialGradient(W * 0.28, H * 0.38, 0, W * 0.28, H * 0.38, W * 0.42);
+      nb.addColorStop(0, 'rgba(74,45,107,0.13)');
+      nb.addColorStop(1, 'rgba(74,45,107,0)');
+      ctx.fillStyle = nb;
+      ctx.fillRect(0, 0, W, H);
+
+      // 星
+      stars.forEach(s => {
+        const twinkle = (Math.sin(t * s.speed * 8 + s.phase) + 1) / 2;
+        const alpha   = s.base + twinkle * s.amp;
+        ctx.beginPath();
+        ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = alpha;
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      t++;
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    /* ── メニュートグル ── */
+    const menuBtn     = document.getElementById('menuBtn');
+    const menuOverlay = document.getElementById('menuOverlay');
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = menuOverlay.classList.toggle('open');
+      menuBtn.classList.toggle('open', isOpen);
+      menuBtn.setAttribute('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
+    });
+
+    menuOverlay.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', () => {
+        menuOverlay.classList.remove('open');
+        menuBtn.classList.remove('open');
+      })
+    );
+  </script>
 </body>
 </html>
