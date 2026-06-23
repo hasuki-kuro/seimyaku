@@ -1,1 +1,128 @@
-かり
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>座標ピッカー</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; background:#111; color:#fff; font-family:monospace; }
+
+    h1 {
+      text-align:center; font-size:14px; letter-spacing:0.1em;
+      padding:12px 8px 8px; color:#d4a843; font-weight:normal;
+    }
+
+    #info {
+      text-align:center;
+      font-size:18px; letter-spacing:0.05em;
+      padding:6px 12px 10px;
+      color:#fff;
+      min-height:36px;
+    }
+    #info span { color:#d4a843; }
+
+    #copy-btn {
+      display:block; margin:0 auto 10px;
+      background:#d4a843; color:#111;
+      border:none; border-radius:4px;
+      padding:6px 20px; font-size:13px;
+      cursor:pointer; letter-spacing:0.05em;
+      visibility:hidden;
+    }
+
+    #map-wrap {
+      position:relative;
+      width:min(96vw, calc(80vh * 1324/1188));
+      aspect-ratio:1324/1188;
+      max-height:80vh;
+      margin:0 auto;
+      cursor:crosshair;
+      touch-action:none;
+    }
+    #map-wrap img {
+      width:100%; height:100%;
+      display:block; user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /* タップした場所に表示するマーカー */
+    #marker {
+      position:absolute;
+      width:14px; height:14px;
+      border-radius:50%;
+      background:#d4a843;
+      border:2px solid #fff;
+      box-shadow:0 0 6px rgba(212,168,67,0.8);
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      display:none;
+    }
+
+    #hint {
+      text-align:center; font-size:11px;
+      color:#555; padding:8px 0 4px;
+      letter-spacing:0.05em;
+    }
+  </style>
+</head>
+<body>
+  <h1>📍 座標ピッカー — タップした場所のパーセントが出ます</h1>
+  <div id="info">地図をタップしてください</div>
+  <button id="copy-btn" onclick="copyCoords()">コピー</button>
+
+  <div id="map-wrap">
+    <img src="map-art.png" alt="map" draggable="false">
+    <div id="marker"></div>
+  </div>
+
+  <div id="hint">タップ → 数値をコピー → Claudeに教えてください</div>
+
+  <script>
+    const wrap   = document.getElementById('map-wrap');
+    const info   = document.getElementById('info');
+    const marker = document.getElementById('marker');
+    const btn    = document.getElementById('copy-btn');
+    let lastText = '';
+
+    function onTap(e) {
+      e.preventDefault();
+      const rect = wrap.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
+      const leftPct  = (x / rect.width  * 100).toFixed(1);
+      const topPct   = (y / rect.height * 100).toFixed(1);
+
+      marker.style.left    = leftPct + '%';
+      marker.style.top     = topPct  + '%';
+      marker.style.display = 'block';
+
+      lastText = `left:${leftPct}% top:${topPct}%`;
+      info.innerHTML = `left: <span>${leftPct}%</span> &nbsp;/&nbsp; top: <span>${topPct}%</span>`;
+      btn.style.visibility = 'visible';
+    }
+
+    wrap.addEventListener('click',      onTap);
+    wrap.addEventListener('touchstart', onTap, {passive:false});
+
+    function copyCoords() {
+      navigator.clipboard.writeText(lastText).then(() => {
+        btn.textContent = 'コピーしました！';
+        setTimeout(() => btn.textContent = 'コピー', 1500);
+      }).catch(() => {
+        // fallback
+        const el = document.createElement('textarea');
+        el.value = lastText;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        btn.textContent = 'コピーしました！';
+        setTimeout(() => btn.textContent = 'コピー', 1500);
+      });
+    }
+  </script>
+</body>
+</html>
