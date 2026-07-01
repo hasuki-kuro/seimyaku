@@ -7,360 +7,100 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #050810;
-      color: #c8d8f0;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    /* ── 星空キャンバス ── */
-    #starCanvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-    }
-
-    /* ── ヘッダー ── */
-    header {
-      position: relative;
-      z-index: 20;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 36px 32px 24px;
-    }
-
-    .site-title {
-      font-family: 'Noto Serif JP', serif;
-      font-weight: 200;
-      font-size: clamp(20px, 4.5vw, 42px);
-      letter-spacing: 0.22em;
-      text-align: center;
-      background: linear-gradient(100deg, #b8ccee 0%, #d4a843 45%, #b8ccee 100%);
-      background-size: 220% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: shimmer 8s linear infinite;
-    }
-
-    @keyframes shimmer {
-      0%   { background-position: 0% center; }
-      100% { background-position: 220% center; }
-    }
-
-    /* ── ハンバーガーボタン ── */
-    .menu-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      z-index: 110;
-      position: absolute;
-      top: 36px;
-      right: 32px;
-    }
-
-    .menu-btn span {
-      display: block;
-      width: 22px;
-      height: 1px;
-      background: #c8d8f0;
-      transition: transform 0.35s ease, opacity 0.35s ease;
-      transform-origin: center;
-    }
-
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #050810; color: #c8d8f0; }
+    body { display: flex; flex-direction: column; font-family: 'Montserrat', sans-serif; }
+    #starCanvas { position: fixed; inset: 0; z-index: 0; }
+    header { position: relative; z-index: 20; display: flex; justify-content: center; align-items: center; padding: 36px 32px 24px; }
+    .site-title { font-family: 'Noto Serif JP', serif; font-weight: 200; font-size: clamp(20px, 4.5vw, 42px); letter-spacing: 0.22em; text-align: center; background: linear-gradient(100deg, #b8ccee 0%, #d4a843 45%, #b8ccee 100%); background-size: 220% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 8s linear infinite; }
+    @keyframes shimmer { 0% { background-position: 0% center; } 100% { background-position: 220% center; } }
+    .menu-btn { background: none; border: none; cursor: pointer; padding: 6px; display: flex; flex-direction: column; gap: 6px; z-index: 110; position: absolute; top: 36px; right: 32px; }
+    .menu-btn span { display: block; width: 22px; height: 1px; background: #c8d8f0; transition: transform 0.35s ease, opacity 0.35s ease; transform-origin: center; }
     .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     .menu-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
     .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-    /* ── メニューオーバーレイ ── */
-    .menu-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: rgba(5, 8, 16, 0.96);
-      backdrop-filter: blur(16px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 52px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-    }
-
-    .menu-overlay.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .menu-overlay nav {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 36px;
-    }
-
-    .menu-overlay nav a {
-      color: #5a6e90;
-      text-decoration: none;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 200;
-      font-size: clamp(22px, 5.5vw, 42px);
-      letter-spacing: 0.35em;
-      transition: color 0.3s ease, letter-spacing 0.35s ease;
-    }
-
-    .menu-overlay nav a:hover {
-      color: #d4a843;
-      letter-spacing: 0.5em;
-    }
-
-    .menu-close-btn {
-      position: absolute;
-      bottom: 48px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: none;
-      border: 1px solid rgba(200, 216, 240, 0.2);
-      color: #5a6e90;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 200;
-      font-size: 11px;
-      letter-spacing: 0.4em;
-      padding: 10px 28px;
-      cursor: pointer;
-      border-radius: 2px;
-      transition: color 0.3s ease, border-color 0.3s ease;
-    }
-
-    .menu-close-btn:hover {
-      color: #c8d8f0;
-      border-color: rgba(200, 216, 240, 0.5);
-    }
-
-    /* ── メインエリア ── */
-    main {
-      position: relative;
-      z-index: 10;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 0 20px 12px;
-      gap: 28px;
-    }
-
-    /* ── 中央装飾エリア ── */
-    .catch {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      text-align: center;
-    }
-
-    .catch-divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      width: 200px;
-    }
-
-    .catch-divider::before,
-    .catch-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(200,216,240,0.25), transparent);
-    }
-
-    .catch-star {
-      color: #d4a843;
-      font-size: 10px;
-      opacity: 0.7;
-    }
-
-    .catch-text {
-      font-family: 'Noto Serif JP', serif;
-      font-weight: 200;
-      font-size: clamp(11px, 1.8vw, 14px);
-      letter-spacing: 0.28em;
-      color: #5a6e90;
-      line-height: 2;
-    }
-
-    /* ── Twitterウィジェット ── */
-    .twitter-wrap {
-      width: 100%;
-      max-width: 360px;
-      height: 200px;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(200, 216, 240, 0.08);
-      background: rgba(10, 20, 44, 0.5);
-    }
-
-    /* ── フッター ── */
-    footer {
-      position: relative;
-      z-index: 10;
-      text-align: center;
-      padding: 10px 0 16px;
-      font-size: 11px;
-      letter-spacing: 0.22em;
-      color: #3a4e6e;
-      font-weight: 300;
-    }
+    .menu-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(5, 8, 16, 0.96); backdrop-filter: blur(16px); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 52px; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+    .menu-overlay.open { opacity: 1; pointer-events: auto; }
+    .menu-overlay nav { display: flex; flex-direction: column; align-items: center; gap: 36px; }
+    .menu-overlay nav a { color: #5a6e90; text-decoration: none; font-family: 'Montserrat', sans-serif; font-weight: 200; font-size: clamp(22px, 5.5vw, 42px); letter-spacing: 0.35em; transition: color 0.3s ease, letter-spacing 0.35s ease; }
+    .menu-overlay nav a:hover { color: #d4a843; letter-spacing: 0.5em; }
+    .menu-close-btn { position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%); background: none; border: 1px solid rgba(200, 216, 240, 0.2); color: #5a6e90; font-family: 'Montserrat', sans-serif; font-weight: 200; font-size: 11px; letter-spacing: 0.4em; padding: 10px 28px; cursor: pointer; border-radius: 2px; transition: color 0.3s ease, border-color 0.3s ease; }
+    .menu-close-btn:hover { color: #c8d8f0; border-color: rgba(200, 216, 240, 0.5); }
+    main { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 20px 12px; gap: 28px; }
+    .catch { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+    .catch-divider { display: flex; align-items: center; gap: 12px; width: 200px; }
+    .catch-divider::before, .catch-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(200,216,240,0.25), transparent); }
+    .catch-star { color: #d4a843; font-size: 10px; opacity: 0.7; }
+    .catch-text { font-family: 'Noto Serif JP', serif; font-weight: 200; font-size: clamp(11px, 1.8vw, 14px); letter-spacing: 0.28em; color: #5a6e90; line-height: 2; }
+    .twitter-wrap { width: 100%; max-width: 360px; height: 200px; border-radius: 14px; overflow: hidden; border: 1px solid rgba(200, 216, 240, 0.08); background: rgba(10, 20, 44, 0.5); }
+    footer { position: relative; z-index: 10; text-align: center; padding: 10px 0 16px; font-size: 11px; letter-spacing: 0.22em; color: #3a4e6e; font-weight: 300; }
   </style>
 </head>
 <body>
-
   <canvas id="starCanvas"></canvas>
-
   <header>
     <h1 class="site-title">星脈と深淵の狭間で</h1>
     <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">
       <span></span><span></span><span></span>
     </button>
   </header>
-
   <div class="menu-overlay" id="menuOverlay">
     <nav>
       <a href="story.html">STORY</a>
       <a href="episodes.html">EPISODES</a>
       <a href="character.html">CHARACTER</a>
       <a href="map.html">MAP</a>
+      <a href="word.html">WORD</a>
     </nav>
     <button class="menu-close-btn" id="menuCloseBtn">CLOSE</button>
   </div>
-
   <main>
     <div class="catch">
       <div class="catch-divider"><span class="catch-star">✦</span></div>
-      <p class="catch-text">
-        世界の縁で、少年は剣を握り、少女は魔法を。<br>
-        科学と魔法の狭間に生きる少年と少女の物語
-      </p>
+      <p class="catch-text">世界の縁で、少年は剣を握り、少女は魔法を。<br>科学と魔法の狭間に生きる少年と少女の物語</p>
       <div class="catch-divider"><span class="catch-star">✦</span></div>
     </div>
     <div class="twitter-wrap">
-      <a class="twitter-timeline"
-         data-theme="dark"
-         data-height="200"
-         data-chrome="noheader nofooter noborders transparent"
-         href="https://x.com/kuronekomaru015">
-        Posts by kuronekomaru015
-      </a>
+      <a class="twitter-timeline" data-theme="dark" data-height="200" data-chrome="noheader nofooter noborders transparent" href="https://x.com/kuronekomaru015">Posts by kuronekomaru015</a>
     </div>
   </main>
-
   <footer>@hasuki_kuro</footer>
-
   <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
-
   <script>
-    /* ── 星空 ── */
     const canvas = document.getElementById('starCanvas');
     const ctx = canvas.getContext('2d');
-
-    function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     resize();
     window.addEventListener('resize', resize);
-
-    const COLORS = ['#c8d8f0', '#c8d8f0', '#c8d8f0', '#d4a843', '#a8b8e0', '#c0a8e8'];
-    const stars = Array.from({ length: 220 }, () => ({
-      x:     Math.random(),
-      y:     Math.random(),
-      r:     Math.random() * 1.6 + 0.2,
-      base:  Math.random() * 0.5 + 0.2,
-      amp:   Math.random() * 0.5,
-      speed: Math.random() * 0.018 + 0.004,
-      phase: Math.random() * Math.PI * 2,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-    }));
-
+    const COLORS = ['#c8d8f0','#c8d8f0','#c8d8f0','#d4a843','#a8b8e0','#c0a8e8'];
+    const stars = Array.from({ length: 220 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.6 + 0.2, base: Math.random() * 0.5 + 0.2, amp: Math.random() * 0.5, speed: Math.random() * 0.018 + 0.004, phase: Math.random() * Math.PI * 2, color: COLORS[Math.floor(Math.random() * COLORS.length)] }));
     let t = 0;
     function draw() {
       const W = canvas.width, H = canvas.height;
       ctx.clearRect(0, 0, W, H);
-
-      // 背景グラデーション
-      const bg = ctx.createRadialGradient(W * 0.5, H * 0.25, 0, W * 0.5, H * 0.25, W * 0.75);
-      bg.addColorStop(0, '#0e1c38');
-      bg.addColorStop(0.6, '#080f20');
-      bg.addColorStop(1, '#050810');
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, W, H);
-
-      // 淡い星雲
-      const nb = ctx.createRadialGradient(W * 0.28, H * 0.38, 0, W * 0.28, H * 0.38, W * 0.42);
-      nb.addColorStop(0, 'rgba(74,45,107,0.13)');
-      nb.addColorStop(1, 'rgba(74,45,107,0)');
-      ctx.fillStyle = nb;
-      ctx.fillRect(0, 0, W, H);
-
-      // 星
+      const bg = ctx.createRadialGradient(W*.5,H*.25,0,W*.5,H*.25,W*.75);
+      bg.addColorStop(0,'#0e1c38'); bg.addColorStop(.6,'#080f20'); bg.addColorStop(1,'#050810');
+      ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+      const nb = ctx.createRadialGradient(W*.28,H*.38,0,W*.28,H*.38,W*.42);
+      nb.addColorStop(0,'rgba(74,45,107,0.13)'); nb.addColorStop(1,'rgba(74,45,107,0)');
+      ctx.fillStyle = nb; ctx.fillRect(0,0,W,H);
       stars.forEach(s => {
-        const twinkle = (Math.sin(t * s.speed * 8 + s.phase) + 1) / 2;
-        const alpha   = s.base + twinkle * s.amp;
-        ctx.beginPath();
-        ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = s.color;
-        ctx.globalAlpha = alpha;
-        ctx.fill();
+        const tw = (Math.sin(t * s.speed * 8 + s.phase) + 1) / 2;
+        ctx.beginPath(); ctx.arc(s.x*W, s.y*H, s.r, 0, Math.PI*2);
+        ctx.fillStyle = s.color; ctx.globalAlpha = s.base + tw * s.amp; ctx.fill();
       });
-      ctx.globalAlpha = 1;
-
-      t++;
-      requestAnimationFrame(draw);
+      ctx.globalAlpha = 1; t++; requestAnimationFrame(draw);
     }
     draw();
-
-    /* ── メニュートグル ── */
-    const menuBtn     = document.getElementById('menuBtn');
+    const menuBtn = document.getElementById('menuBtn');
     const menuOverlay = document.getElementById('menuOverlay');
-
     menuBtn.addEventListener('click', () => {
       const isOpen = menuOverlay.classList.toggle('open');
       menuBtn.classList.toggle('open', isOpen);
       menuBtn.setAttribute('aria-label', isOpen ? 'メニューを閉じる' : 'メニューを開く');
     });
-
-    menuOverlay.querySelectorAll('a').forEach(a =>
-      a.addEventListener('click', () => {
-        menuOverlay.classList.remove('open');
-        menuBtn.classList.remove('open');
-      })
-    );
-
-    document.getElementById('menuCloseBtn').addEventListener('click', () => {
-      menuOverlay.classList.remove('open');
-      menuBtn.classList.remove('open');
-    });
+    menuOverlay.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { menuOverlay.classList.remove('open'); menuBtn.classList.remove('open'); }));
+    document.getElementById('menuCloseBtn').addEventListener('click', () => { menuOverlay.classList.remove('open'); menuBtn.classList.remove('open'); });
   </script>
 </body>
 </html>
