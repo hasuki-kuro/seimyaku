@@ -3,86 +3,274 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CHARACTER | 星脈と深淵の狭間で</title>
+  <title>CHARACTER | 星脈と位相の狭間で</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200;300;400;500&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-    html, body { width:100%; height:100%; overflow:hidden; background:#050810; color:#c8d8f0; }
-    body { display:flex; flex-direction:column; font-family:"Montserrat",sans-serif; }
+    html, body { width:100%; height:100%; background:#050810; color:#c8d8f0; }
+    body { display:flex; flex-direction:column; font-family:"Montserrat",sans-serif; min-height:100%; }
     #starCanvas { position:fixed; inset:0; z-index:0; }
 
-    header {
-      position:relative; z-index:20;
-      display:flex; justify-content:center; align-items:center;
-      padding:36px 32px 24px;
-    }
-    .site-title {
-      font-family:"Noto Serif JP",serif; font-weight:200;
-      font-size:clamp(20px,4.5vw,42px); letter-spacing:0.22em; text-align:center;
-      background:linear-gradient(100deg,#b8ccee 0%,#d4a843 45%,#b8ccee 100%);
-      background-size:220% auto;
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      animation:shimmer 8s linear infinite;
-    }
-    @keyframes shimmer {
-      0%   { background-position:0% center; }
-      100% { background-position:220% center; }
-    }
-    .back-btn {
-      position:absolute; top:40px; left:32px;
-      background:none; border:none; cursor:pointer;
-      color:#3a4e6e; font-family:"Montserrat",sans-serif;
-      font-weight:200; font-size:11px; letter-spacing:0.35em;
-      text-decoration:none;
-      transition:color 0.3s ease;
-    }
-    .back-btn:hover { color:#c8d8f0; }
-    .back-btn::before { content:"← "; }
+    /* header */
+    header { position:relative; z-index:20; display:flex; justify-content:center; align-items:center; padding:36px 32px 24px; flex-shrink:0; }
+    .site-title-link { text-decoration:none; display:block; }
+    .site-title { font-family:"Noto Serif JP",serif; font-weight:200; font-size:clamp(20px,4.5vw,42px); letter-spacing:0.22em; text-align:center; background:linear-gradient(100deg,#b8ccee 0%,#d4a843 45%,#b8ccee 100%); background-size:220% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 8s linear infinite; transition:opacity 0.3s; }
+    .site-title:hover { opacity:0.7; }
+    @keyframes shimmer { 0%{background-position:0% center} 100%{background-position:220% center} }
 
-    main {
-      position:relative; z-index:10;
-      flex:1; display:flex; flex-direction:column;
-      justify-content:center; align-items:center; gap:24px;
+    /* hamburger */
+    .menu-btn { background:none; border:none; cursor:pointer; padding:6px; display:flex; flex-direction:column; gap:6px; z-index:110; position:absolute; top:36px; right:32px; }
+    .menu-btn span { display:block; width:22px; height:1px; background:#c8d8f0; transition:transform 0.35s ease,opacity 0.35s ease; transform-origin:center; }
+    .menu-btn.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .menu-btn.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+    .menu-btn.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+    /* overlay */
+    .menu-overlay { position:fixed; inset:0; z-index:100; background:rgba(5,8,16,0.96); backdrop-filter:blur(16px); display:flex; flex-direction:column; justify-content:center; align-items:center; gap:52px; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
+    .menu-overlay.open { opacity:1; pointer-events:auto; }
+    .menu-overlay nav { display:flex; flex-direction:column; align-items:center; gap:36px; }
+    .menu-overlay nav a { color:#5a6e90; text-decoration:none; font-family:"Montserrat",sans-serif; font-weight:200; font-size:clamp(22px,5.5vw,42px); letter-spacing:0.35em; transition:color 0.3s ease,letter-spacing 0.35s ease; }
+    .menu-overlay nav a:hover { color:#d4a843; letter-spacing:0.5em; }
+    .menu-close-btn { position:absolute; bottom:48px; left:50%; transform:translateX(-50%); background:none; border:1px solid rgba(200,216,240,0.2); color:#5a6e90; font-family:"Montserrat",sans-serif; font-weight:200; font-size:11px; letter-spacing:0.4em; padding:10px 28px; cursor:pointer; border-radius:2px; transition:color 0.3s ease,border-color 0.3s ease; }
+    .menu-close-btn:hover { color:#c8d8f0; border-color:rgba(200,216,240,0.5); }
+
+/* ── ページ見出しエリア ── */
+    .page-heading {
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+      margin-bottom:20px;
     }
     .page-label {
       font-family:"Montserrat",sans-serif; font-weight:200;
-      font-size:clamp(28px,7vw,56px); letter-spacing:0.45em;
-      color:#1e2e4a;
+      font-size:clamp(22px,5vw,40px); letter-spacing:0.45em;
+      color:#3a5478;
     }
-    .divider {
-      display:flex; align-items:center; gap:12px; width:180px;
+    .chapter-label {
+      font-family:"Noto Serif JP",serif; font-weight:300;
+      font-size:clamp(13px,1.8vw,16px); letter-spacing:0.4em;
+      color:#9abcd4;
     }
-    .divider::before, .divider::after {
+
+    /* ── 罫線 ── */
+    .section-divider {
+      display:flex; align-items:center; gap:12px;
+      width:min(260px, 80vw); margin:0 auto 24px;
+    }
+    .section-divider::before, .section-divider::after {
       content:""; flex:1; height:1px;
       background:linear-gradient(90deg,transparent,rgba(200,216,240,0.18),transparent);
     }
-    .divider-star { color:#d4a843; font-size:9px; opacity:0.6; }
-    .coming {
-      font-family:"Noto Serif JP",serif; font-weight:200;
-      font-size:clamp(11px,1.8vw,13px); letter-spacing:0.32em; color:#3a4e6e;
+    .section-divider span { color:#d4a843; font-size:9px; opacity:0.6; }
+
+    /* ── 五十音フィルター ── */
+    .kana-filter {
+      display:flex; flex-wrap:wrap; justify-content:center;
+      gap:8px; margin-bottom:40px;
+      max-width:600px; margin-left:auto; margin-right:auto;
+    }
+    .kana-btn {
+      background:none;
+      border:1px solid rgba(200,216,240,0.12);
+      color:#3a4e6e;
+      font-family:"Noto Serif JP",serif; font-weight:300;
+      font-size:13px; letter-spacing:0.1em;
+      padding:5px 14px; border-radius:2px; cursor:pointer;
+      transition:color 0.25s, border-color 0.25s, background 0.25s;
+      min-width:48px;
+    }
+    .kana-btn:hover {
+      color:#c8d8f0;
+      border-color:rgba(200,216,240,0.3);
+    }
+    .kana-btn.active {
+      color:#d4a843;
+      border-color:rgba(212,168,67,0.5);
+      background:rgba(212,168,67,0.06);
     }
 
+    /* ── カードグリッド ── */
+    .card-group { max-width:900px; margin:0 auto; }
+
+    .main-row {
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:16px;
+      margin-bottom:16px;
+    }
+    .sub-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+      gap:16px;
+    }
+
+    .card {
+      background:rgba(14,28,56,0.55);
+      border:1px solid rgba(200,216,240,0.08);
+      border-radius:4px;
+      padding:26px 20px 22px;
+      display:flex; flex-direction:column; align-items:center; gap:12px;
+      backdrop-filter:blur(6px);
+      transition:border-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+    }
+    .card:hover {
+      border-color:rgba(212,168,67,0.3);
+      transform:translateY(-3px);
+    }
+    .card.hidden {
+      display:none;
+    }
+
+    .card-star { color:#d4a843; font-size:10px; opacity:0.6; }
+    .card-name {
+      font-family:"Noto Serif JP",serif; font-weight:300;
+      font-size:clamp(16px,2.2vw,20px); letter-spacing:0.18em;
+      color:#c8d8f0; text-align:center;
+    }
+    .card-divider {
+      width:36px; height:1px;
+      background:linear-gradient(90deg,transparent,rgba(200,216,240,0.25),transparent);
+    }
+    .card-desc {
+      font-family:"Noto Serif JP",serif; font-weight:200;
+      font-size:clamp(11px,1.3vw,12.5px); line-height:2;
+      letter-spacing:0.06em; color:#8aafc8; text-align:center;
+    }
+
+    .vignette { position:fixed; inset:0; z-index:1; pointer-events:none; background:radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 35%, rgba(3,6,14,0.55) 100%); }
     footer {
       position:relative; z-index:10;
       text-align:center; padding:10px 0 16px;
-      font-size:11px; letter-spacing:0.22em; color:#3a4e6e; font-weight:300;
+      font-size:11px; letter-spacing:0.22em; color:#7a9ab8; font-weight:300;
     }
+
+    @media
+
+    .vignette { position:fixed; inset:0; z-index:1; pointer-events:none; background:radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 35%, rgba(3,6,14,0.55) 100%); }
+    footer { position:relative; z-index:10; text-align:center; padding:10px 0 16px; font-size:11px; letter-spacing:0.22em; color:#7a9ab8; font-weight:300; flex-shrink:0; }
   </style>
 </head>
 <body>
   <canvas id="starCanvas"></canvas>
-
+  <div class="vignette"></div>
   <header>
-    <a class="back-btn" href="index.html">TOP</a>
-    <h1 class="site-title">星脈と深淵の狭間で</h1>
+    <a href="index.html" class="site-title-link">
+      <h1 class="site-title">星脈と位相の狭間で</h1>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-label="メニューを開く">
+      <span></span><span></span><span></span>
+    </button>
   </header>
 
+  <div class="menu-overlay" id="menuOverlay">
+    <nav>
+      <a href="story.html">STORY</a>
+      <a href="episodes.html">EPISODES</a>
+      <a href="character.html">CHARACTER</a>
+      <a href="map.html">MAP</a>
+      <a href="word.html">WORD</a>
+    </nav>
+    <button class="menu-close-btn" id="menuCloseBtn">CLOSE</button>
+  </div>
+
   <main>
-    <p class="page-label">CHARACTER</p>
-    <div class="divider"><span class="divider-star">✦</span></div>
-    <p class="coming">準備中</p>
-  </main>
+      <div class="page-heading">
+        <p class="page-label">CHARACTER</p>
+        <p class="chapter-label">第1章</p>
+      </div>
+  
+      <div class="section-divider"><span>✦</span></div>
+  
+      <!-- 五十音フィルター（サブキャラ対象） -->
+      <div class="kana-filter">
+        <button class="kana-btn active" data-row="all">全て</button>
+        <button class="kana-btn" data-row="ア">ア行</button>
+        <button class="kana-btn" data-row="サ">サ行</button>
+        <button class="kana-btn" data-row="タ">タ行</button>
+        <button class="kana-btn" data-row="ナ">ナ行</button>
+        <button class="kana-btn" data-row="マ">マ行</button>
+        <button class="kana-btn" data-row="ラ">ラ行</button>
+      </div>
+  
+      <div class="card-group">
+  
+        <!-- メイン2人（常に表示・フィルター対象外） -->
+        <div class="main-row">
+          <div class="card">
+            <span class="card-star">✦</span>
+            <p class="card-name">ソラ</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">ある日見つけた「何か」を知るため、剣一本を手に世界の真実を求めてアレシスへと踏み出した。不器用でも真っすぐな瞳が、出会う者の心を動かしていく。</p>
+          </div>
+          <div class="card">
+            <span class="card-star">✦</span>
+            <p class="card-name">リゼア</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">ソラが旅立つのを前に、彼女もついて行くことを決意した。静かな瞳の奥に、何を想うのかは誰もわからない。</p>
+          </div>
+        </div>
+  
+        <!-- サブキャラ（五十音順・フィルター対象） -->
+        <div class="sub-grid" id="subGrid">
+  
+          <div class="card" data-row="ア">
+            <span class="card-star">✦</span>
+            <p class="card-name">アスカ</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">アレシス武術学院3年生にして、学院随一の秀才。自らの意志でソラの師匠となる。仲の良くない者には言葉の節々にトゲがあり冷たい人間だと思われることもあるが、気の知れた人間には優しくお節介な面もある。</p>
+          </div>
+  
+          <div class="card" data-row="ア">
+            <span class="card-star">✦</span>
+            <p class="card-name">アッシュ</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">アレシスへ向かう道中、窮地のソラとリゼアの前に現れた謎の男性。盗賊を退け、言葉を残し、アクセサリーを手渡してその場を去った。謎多き男性。</p>
+          </div>
+  
+          <div class="card" data-row="ア">
+            <span class="card-star">✦</span>
+            <p class="card-name">エルダー</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">ソラたちと同じ途中入学組の武術科1年生。アレシス道場の出身で、場を沸かせる賑やかさを持ち、天然さと裏表のない性格でぐいぐいと距離を縮めてくる、コミュ力おばけ。</p>
+          </div>
+  
+          <div class="card" data-row="サ">
+            <span class="card-star">✦</span>
+            <p class="card-name">シャルド</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">飄々とした風貌に本性を隠す男性。ソラとリゼアにアレシス武術学院への入学を勧めた張本人であり、学院内でそれなりの立場に就いているらしい。何を考えているのか、表情からは読めない。</p>
+          </div>
+  
+          <div class="card" data-row="タ">
+            <span class="card-star">✦</span>
+            <p class="card-name">ちゃちゃ丸</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">猫カフェ「にゃごすちん」が誇る人気の黒猫。ネロ命名の「ちゃちゃ丸」という名に本人（猫）は無頓着。会話の間隙を縫って割り込んでくるタイミングは、もはや神がかっている。</p>
+          </div>
+  
+          <div class="card" data-row="ナ">
+            <span class="card-star">✦</span>
+            <p class="card-name">ネロ</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">「にゃごすちん」を営む中年男性。ミオの父。温厚で穏やかな人柄に誰もが安心するが、ふとした瞬間に浮かぶ冷ややかな笑顔には誰もが恐怖を覚える。</p>
+          </div>
+  
+          <div class="card" data-row="マ">
+            <span class="card-star">✦</span>
+            <p class="card-name">ミオ</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">猫カフェ「にゃごすちん」で働く、ソラたちと同年代の少女。誰とでもすぐに打ち解ける天真爛漫さを持つ一方、気づけば騒動の中心にいることも少なくない。</p>
+          </div>
+  
+          <div class="card" data-row="ラ">
+            <span class="card-star">✦</span>
+            <p class="card-name">ローライト</p>
+            <div class="card-divider"></div>
+            <p class="card-desc">ソラたちと同じ途中入学組の同級生でアレシスの名門家系。迅の剣を操る実力者でありながら、その立ち振る舞いはどこか陰を帯びている。ソラたちのことを「下賎な村の人間」と呼び、敵対視している。</p>
+          </div>
+  
+        </div>
+      </div>
+    </main>
 
   <footer>@hasuki_kuro</footer>
 
@@ -90,36 +278,32 @@
     const canvas = document.getElementById("starCanvas");
     const ctx = canvas.getContext("2d");
     function resize() { canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
-    resize();
-    window.addEventListener("resize", resize);
+    resize(); window.addEventListener("resize", resize);
     const COLORS=["#c8d8f0","#c8d8f0","#c8d8f0","#d4a843","#a8b8e0","#c0a8e8"];
-    const stars=Array.from({length:220},()=>{
-      return {
-        x:Math.random(), y:Math.random(),
-        r:Math.random()*1.6+0.2, base:Math.random()*0.5+0.2,
-        amp:Math.random()*0.5, speed:Math.random()*0.018+0.004,
-        phase:Math.random()*Math.PI*2,
-        color:COLORS[Math.floor(Math.random()*COLORS.length)]
-      };
-    });
+    const stars=Array.from({length:220},()=>({ x:Math.random(), y:Math.random(), r:Math.random()*1.6+0.2, base:Math.random()*0.5+0.2, amp:Math.random()*0.5, speed:Math.random()*0.018+0.004, phase:Math.random()*Math.PI*2, color:COLORS[Math.floor(Math.random()*COLORS.length)] }));
     let t=0;
     function draw(){
       const W=canvas.width, H=canvas.height;
       ctx.clearRect(0,0,W,H);
       const bg=ctx.createRadialGradient(W*.5,H*.25,0,W*.5,H*.25,W*.75);
-      bg.addColorStop(0,"#0e1c38"); bg.addColorStop(.6,"#080f20"); bg.addColorStop(1,"#050810");
+      bg.addColorStop(0,"#060d1a"); bg.addColorStop(.5,"#050810"); bg.addColorStop(1,"#050810");
       ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
       const nb=ctx.createRadialGradient(W*.28,H*.38,0,W*.28,H*.38,W*.42);
       nb.addColorStop(0,"rgba(74,45,107,0.13)"); nb.addColorStop(1,"rgba(74,45,107,0)");
       ctx.fillStyle=nb; ctx.fillRect(0,0,W,H);
-      stars.forEach(s=>{
-        const tw=(Math.sin(t*s.speed*8+s.phase)+1)/2;
-        ctx.beginPath(); ctx.arc(s.x*W,s.y*H,s.r,0,Math.PI*2);
-        ctx.fillStyle=s.color; ctx.globalAlpha=s.base+tw*s.amp; ctx.fill();
-      });
+      stars.forEach(s=>{ const tw=(Math.sin(t*s.speed*8+s.phase)+1)/2; ctx.beginPath(); ctx.arc(s.x*W,s.y*H,s.r,0,Math.PI*2); ctx.fillStyle=s.color; ctx.globalAlpha=s.base+tw*s.amp; ctx.fill(); });
       ctx.globalAlpha=1; t++; requestAnimationFrame(draw);
     }
     draw();
+    const menuBtn = document.getElementById("menuBtn");
+    const menuOverlay = document.getElementById("menuOverlay");
+    menuBtn.addEventListener("click", () => {
+      const isOpen = menuOverlay.classList.toggle("open");
+      menuBtn.classList.toggle("open", isOpen);
+      menuBtn.setAttribute("aria-label", isOpen ? "メニューを閉じる" : "メニューを開く");
+    });
+    menuOverlay.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { menuOverlay.classList.remove("open"); menuBtn.classList.remove("open"); }));
+    document.getElementById("menuCloseBtn").addEventListener("click", () => { menuOverlay.classList.remove("open"); menuBtn.classList.remove("open"); });
   </script>
 </body>
 </html>
