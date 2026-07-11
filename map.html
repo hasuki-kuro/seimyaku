@@ -94,6 +94,11 @@
     }
 
     .vignette { position:fixed; inset:0; z-index:1; pointer-events:none; background:radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 35%, rgba(3,6,14,0.55) 100%); }
+    main { position:relative; z-index:10; flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:10px; padding:0 16px; }
+    .page-label { font-family:"Montserrat",sans-serif; font-weight:200; font-size:clamp(18px,3.6vw,26px); letter-spacing:0.4em; color:#3a5478; }
+    .divider { display:flex; align-items:center; gap:12px; width:160px; }
+    .divider::before, .divider::after { content:""; flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(200,216,240,0.18),transparent); }
+    .divider-star { color:#d4a843; font-size:9px; opacity:0.6; }
     footer { position:relative; z-index:10; text-align:center; padding:10px 0 16px; font-size:11px; letter-spacing:0.22em; color:#7a9ab8; font-weight:300; flex-shrink:0; }
   </style>
 </head>
