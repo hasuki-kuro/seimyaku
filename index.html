@@ -34,20 +34,31 @@
     .catch-divider { display: flex; align-items: center; gap: 12px; width: 200px; }
     .catch-divider::before, .catch-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(200,216,240,0.25), transparent); }
     .catch-star { color: #d4a843; font-size: 10px; opacity: 0.7; }
-    .catch-text { font-family: 'Noto Serif JP', serif; font-weight: 200; font-size: clamp(11px, 1.8vw, 14px); letter-spacing: 0.28em; color: #5a6e90; line-height: 2; }
+    .catch-text { font-family: 'Noto Serif JP', serif; font-weight: 200; font-size: clamp(11px, 1.8vw, 14px); letter-spacing: 0.28em; color: #8aafc8; line-height: 2; }
     .novel-links { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 340px; }
     .novel-btn { display: block; width: 100%; text-decoration: none; text-align: center; font-family: 'Noto Serif JP', serif; font-weight: 200; font-size: clamp(13px, 1.8vw, 15px); letter-spacing: 0.2em; color: #c8d8f0; border: 1px solid rgba(200,216,240,0.22); border-radius: 3px; padding: 18px 24px 16px; background: rgba(14,28,56,0.5); backdrop-filter: blur(6px); transition: color 0.3s, border-color 0.3s, background 0.3s; position: relative; }
     .novel-btn:hover { color: #d4a843; border-color: rgba(212,168,67,0.5); background: rgba(212,168,67,0.06); }
-    .novel-btn .btn-platform { display: block; font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 0.45em; color: #3a4e6e; margin-bottom: 8px; transition: color 0.3s; }
+    .novel-btn .btn-platform { display: block; font-family: 'Montserrat', sans-serif; font-size: 9px; letter-spacing: 0.45em; color: #6a8aaa; margin-bottom: 8px; transition: color 0.3s; }
     .novel-btn:hover .btn-platform { color: rgba(212,168,67,0.55); }
     .novel-btn .btn-title { display: block; margin-bottom: 10px; }
-    .novel-btn .btn-cta { display: inline-block; font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 0.3em; color: #3a4e6e; border: 1px solid rgba(200,216,240,0.15); border-radius: 2px; padding: 4px 14px; transition: color 0.3s, border-color 0.3s; }
+    .novel-btn .btn-cta { display: inline-block; font-family: 'Montserrat', sans-serif; font-size: 10px; letter-spacing: 0.3em; color: #7a9ab8; border: 1px solid rgba(200,216,240,0.28); border-radius: 2px; padding: 4px 14px; transition: color 0.3s, border-color 0.3s; }
     .novel-btn:hover .btn-cta { color: #d4a843; border-color: rgba(212,168,67,0.4); }
-    footer { position: relative; z-index: 10; text-align: center; padding: 10px 0 16px; font-size: 11px; letter-spacing: 0.22em; color: #3a4e6e; font-weight: 300; }
+    /* vignette overlay */
+    .vignette { position:fixed; inset:0; z-index:1; pointer-events:none;
+      background:radial-gradient(ellipse 70% 60% at 50% 45%, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 35%, rgba(3,6,14,0.55) 100%); }
+
+    /* catch text backdrop */
+    .catch { background:rgba(3,6,16,0.35); backdrop-filter:blur(2px); border-radius:6px; padding:20px 28px; }
+
+    /* novel buttons — slightly stronger backdrop */
+    .novel-btn { background:rgba(8,15,32,0.65) !important; border-color:rgba(200,216,240,0.28) !important; }
+
+    footer { position: relative; z-index: 10; text-align: center; padding: 10px 0 16px; font-size: 11px; letter-spacing: 0.22em; color: #7a9ab8; font-weight: 300; }
   </style>
 </head>
 <body>
   <canvas id="starCanvas"></canvas>
+  <div class="vignette"></div>
   <header>
     <h1 class="site-title">
         <span>星脈と位相の狭間で</span>
@@ -101,7 +112,7 @@
       const W = canvas.width, H = canvas.height;
       ctx.clearRect(0, 0, W, H);
       const bg = ctx.createRadialGradient(W*.5,H*.25,0,W*.5,H*.25,W*.75);
-      bg.addColorStop(0,'#0e1c38'); bg.addColorStop(.6,'#080f20'); bg.addColorStop(1,'#050810');
+      bg.addColorStop(0,'#060d1a'); bg.addColorStop(.5,'#050810'); bg.addColorStop(1,'#050810');
       ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
       const nb = ctx.createRadialGradient(W*.28,H*.38,0,W*.28,H*.38,W*.42);
       nb.addColorStop(0,'rgba(74,45,107,0.13)'); nb.addColorStop(1,'rgba(74,45,107,0)');
